@@ -1,17 +1,46 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
 const { join } = require('path');
 
-// q: How do i add the type webpack config?
-// a: You can add the type to the module.exports like this:
-// module.exports: import { Configuration } from 'webpack';
+const configValues = {
+    build: {
+        default: {
+            extractLicenses: false,
+            optimization: false,
+            sourceMap: true,
+            vendorChunk: true
+        },
+        production: {
+            optimization: true,
+            outputHashing: "all",
+            sourceMap: false,
+            namedChunks: false,
+            extractLicenses: true,
+            vendorChunk: false
+        },
+        serve: {
+            default: {
+                hot: true
+            },
+            production: {
+                hot: false
+            
+            }
+        }
+    }
+}
+
+const nxTarget = process.env.NX_TASK_TARGET_NAME ?? 'build';
+const nxConfiguration = process.env.NX_TASK_CONFIGURATION_NAME ?? 'default';
 /**
  * @type {import('webpack').WebpackOptionsNormalized}
  */
-
 let config = {
   output: {
-    // Relative to projectRoot
     path: join(__dirname, '../../dist/apps/happynrwl'),
+  },
+  devServer: {
+    port: 4200,
+    ...configValues['serve'][nxConfiguration]
   },
   plugins: [
     new NxAppWebpackPlugin({
@@ -23,6 +52,7 @@ let config = {
       assets: ['./src/favicon.ico', './src/assets'],
       styles: ['./src/styles.scss'],
       scripts: [],
+       ...configValues[nxTarget][nxConfiguration]
     }),
   ],
 };

@@ -5,23 +5,6 @@
   "projectType": "application",
   "tags": [],
   "targets": {
-    "serve": {
-      "executor": "@nx/webpack:dev-server",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "happynrwl:build",
-        "hmr": true
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "happynrwl:build:development"
-        },
-        "production": {
-          "buildTarget": "happynrwl:build:production",
-          "hmr": false
-        }
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint"
     },
