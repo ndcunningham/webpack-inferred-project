@@ -2,7 +2,7 @@
 
 ## Migration Steps
 
-When using custom or additional plugins that rely on Nx context in Webpack, they may not function correctly because Webpack is no longer running through the executor. This issue might necessitate a migration similar to the approach taken with Rollup.
+This is a guide to help you migrate your Nx workspace that uses
 
 Migration Steps
 
@@ -18,3 +18,5 @@ Migration Steps
 
 1. Dependencies
 `webpack-cli` is not installed by default and needs to be added since the `@nx/webpack/plugin` relies on it.
+
+The `main` branch is the vanillia version of the app, it was generated using `NX_ADD_PLUGIN=false npx create-nx-workspace@latest --preset=react --bundler=webpack`
