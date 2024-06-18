@@ -4,21 +4,32 @@
 
 This is a guide to help you migrate your Nx workspace that uses
 
-Migration Steps
+Migration Steps (Done)
 
-1. Move to `NxAppWebpackPlugin` and `NxReactWebpackPlugin`
+1. Migrate the webpack config to be standardized (`migrate-phase-1` branch) to use inferred plugins
 
-    We should transition from using `withNx`, `withWeb` and `withReact` to `NxAppWebpackPlugin` and `NxReactWebpackPlugin` since the former uses Nx args (ExecutorContext, projectGraph etc...)
-    Which are not available when running Webpack outside of the executor.
-    You might encounter errors such as:
+    This means moving options from `project.json` to `webpack.config.js` and removing the targets from `project.json` if no other options are present
 
-    ```shell
-    Error: [readCachedProjectGraph] ERROR: No cached ProjectGraph is available
-    ```
+1. Add `webpack-cli` to the workspace
 
-1. Dependencies
-`webpack-cli` is not installed by default and needs to be added since the `@nx/webpack/plugin` relies on it.
+- By default this is not installed and is necessary for inferred plugins to work
 
-The `main` branch is the vanillia version of the app, it was generated using `NX_ADD_PLUGIN=false npx create-nx-workspace@latest --preset=react --bundler=webpack`
+### Note
 
-The `migrated` branch contains the manaully migrated version of the app.
+The `baseHref` options exists in both `build` and `serve` targets.
+
+However because it only affects the index.html file and it's `base` tag which are not available in development mode. It should be safe to only have it as a build option.
+
+If this needs to be customized you could have something like
+
+```js
+baseHref: process.env.NODE_ENV === 'production' ? '/my-custom-base-href/' : '/',
+```
+
+The `main` branch is the vanillia version of the app, it was generated using `NX_ADD_PLUGIN=false npx create-nx-workspace@latest --preset=react --bundler=webpack`.
+
+### The migration steps should be done in the following order
+
+1. Migrate the webpack config to be standardized (`migrate-phase-1` branch)
+
+1. Migrate the project config to use the inferred webpack plugins (`migrate-phase-2` branch)
